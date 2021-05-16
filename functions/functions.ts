@@ -35,3 +35,27 @@ export const fetchData = (url: string): Promise<string> => {
 export const introduce = (salutation: string, ...names: string[]): string => {
     return `${salutation} ${names.join(" ")}`
 }
+
+
+// IMP
+// TS inforces types at compile time and not run time so keep that in mind
+
+// so if this code gets compiled and used in javascript, and lets say you dont pass first and last, you will get run time error which we dont want
+
+export const getNames = (user: { first: string, last: string }): string => {
+    return `${user.first} ${user.last}`
+}
+
+//  better way is to do optional chaining ( ?. ) and check if user exists before using its properties
+
+// will return undefined if first, last not defined instead of run time error
+
+export const betterGetNames = (user: { first: string, last: string }): string => {
+    return `${user?.first} ${user?.last}`
+}
+
+// can make it even better with null coalescing operator ( ?? ) that wont return undefined but a default
+
+export const betterGetNames2 = (user: { first: string, last: string }): string => {
+    return `${user?.first ?? 'first'} ${user?.last ?? 'last'}`
+}
