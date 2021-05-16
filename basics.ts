@@ -46,3 +46,21 @@ const ids: Record<number, string> = {
 }
 
 ids[30] = "c"
+
+// conditionals in ts
+// wont let you compare two different types
+if (ids[30] === "c") {
+}
+
+// loops in ts
+// you can specify type for i but its inferred by ts so not neccesary
+
+for (let i = 0; i < 10; i++) {
+    console.log(i);
+}
+
+// array methods
+
+[1, 2, 3].forEach((n) => console.log(n))
+
+const out: number[] = [4, 5, 6].map((n) => n * 10)
