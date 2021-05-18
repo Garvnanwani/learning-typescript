@@ -9,7 +9,7 @@ userName += " nanwani"
 console.log(userName)
 
 // regex type
-let myRegex = /foo/
+let myRegex: RegExp = /foo/
 
 // array types
 
