@@ -1,27 +1,28 @@
-interface GenericDatabase<T> {
-    get(id: string): T
-    set(id: string, value: T): void
+interface GenericDatabase<K, T> {
+    get(id: K): T
+    set(id: K, value: T): void
 }
 
+type DbKeyType = string | number | symbol
 
-class GenericInMemoryDatabase<T> implements GenericDatabase<T> {
+class GenericInMemoryDatabase<K extends DbKeyType, T> implements GenericDatabase<K, T> {
 
     // there are 3 diff member visibility setting ->
     // private -> only this classscan see it
     // protected -> this class or its descendants can see it
     // public -> default beahvior, anyone can see and modify it
 
-    protected db: Record<string, T> = {}
+    protected db: Record<K, T> = {} as Record<K, T>
 
-    get(id: string): T {
+    get(id: K): T {
         return this.db[id]
     }
-    set(id: string, value: T): void {
+    set(id: K, value: T): void {
         this.db[id] = value
     }
 }
 
-const genericmyDB = new GenericInMemoryDatabase()
+const genericmyDB = new GenericInMemoryDatabase<string, string>()
 
 genericmyDB.set("foo", "bar")
 
@@ -39,7 +40,7 @@ interface Persistable {
     restoreFromString(storedState: string): void
 }
 
-class GenericPersistentMemoryDB<T> extends GenericInMemoryDatabase<T> implements Persistable {
+class GenericPersistentMemoryDB<K extends DbKeyType, T> extends GenericInMemoryDatabase<K, T> implements Persistable {
 
     saveToString(): string {
         return JSON.stringify(this.db)
@@ -49,7 +50,7 @@ class GenericPersistentMemoryDB<T> extends GenericInMemoryDatabase<T> implements
     }
 }
 
-const genericmyDB2 = new GenericPersistentMemoryDB<number>()
+const genericmyDB2 = new GenericPersistentMemoryDB<string, number>()
 
 genericmyDB2.set("foo", 45)
 console.log(genericmyDB2.get("foo"));
@@ -57,7 +58,7 @@ console.log(genericmyDB2.saveToString());
 
 const genericsaved = genericmyDB2.saveToString()
 
-const genericmyDB3 = new GenericPersistentMemoryDB<number>()
+const genericmyDB3 = new GenericPersistentMemoryDB<string, number>()
 
 genericmyDB3.restoreFromString(genericsaved)
 
